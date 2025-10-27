@@ -7,11 +7,11 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('cars', function (Blueprint $table) {
+        Schema::create('parts', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('car_id')->constrained('cars')->cascadeOnDelete();
             $table->string('name')->index();
-            $table->string('registration_number')->index()->unique();
-            $table->boolean('is_registered')->default(false);
+            $table->string('serial_number')->index()->unique();
             $table->timestamps();
         });
     }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Car extends Model
 {
@@ -11,4 +12,12 @@ class Car extends Model
         'registration_number',
         'is_registered',
     ];
+
+    /**
+     * Relations
+     */
+    public function parts(): HasMany
+    {
+        return $this->hasMany(Part::class);
+    }
 }
