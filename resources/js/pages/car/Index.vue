@@ -14,7 +14,7 @@ onMounted(async () => {
 const deleteCar = async (id: number) => {
     if (!confirm('Naozaj chcete vymazať toto auto?')) return;
 
-    carStore.deleteItem(id);
+ await carStore.deleteItem(id);
 };
 
 const goToCreate = () => router.push('/car/create');

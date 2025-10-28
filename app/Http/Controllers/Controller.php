@@ -27,7 +27,7 @@ abstract class Controller
     protected function apiHandler(Closure $apiHandler): JsonResponse
     {
         try {
-            return $apiHandler();
+            return response()->json($apiHandler());
         } catch (\Throwable $exception) {
             report($exception);
 
@@ -37,7 +37,7 @@ abstract class Controller
 
     public function index(Request $request): JsonResponse
     {
-        return $this->apiHandler(function () use ($request): JsonResponse {
+        return $this->apiHandler(function () use ($request) {
             $query = $this->getListingQuery();
 
             foreach ($this->filterable as $column) {
@@ -49,41 +49,37 @@ abstract class Controller
                 }
             }
 
-            return response()->json($query->get());
+            return $query->get();
         });
     }
 
     public function show(int $id): JsonResponse
     {
-        return $this->apiHandler(function () use ($id): JsonResponse {
-            return response()->json($this->getModelQuery()->findOrFail($id));
+        return $this->apiHandler(function () use ($id) {
+            return $this->getModelQuery()->findOrFail($id);
         });
     }
 
     public function store(Request $request): JsonResponse
     {
-        return $this->apiHandler(function () use ($request): JsonResponse {
-            $model = $this->save($request);
-
-            return response()->json($model);
+        return $this->apiHandler(function () use ($request) {
+            return ['item' => $this->save($request), 'message' => __('success_saved_item')];
         });
     }
 
     public function update(Request $request, $id): JsonResponse
     {
-        return $this->apiHandler(function () use ($request, $id): JsonResponse {
-            $model = $this->save($request, $id);
-
-            return response()->json($model);
+        return $this->apiHandler(function () use ($request, $id) {
+            return ['item' => $this->save($request, $id), 'message' => __('success_saved_item')];
         });
     }
 
     public function destroy(int $id): JsonResponse
     {
-        return $this->apiHandler(function () use ($id): JsonResponse {
+        return $this->apiHandler(function () use ($id) {
             $this->model::findOrFail($id)->delete();
 
-            return response()->json(data: ['message' => 'Deleted item']);
+            return ['message' => __('success_deleted_item')];
         });
     }
 }

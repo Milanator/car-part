@@ -1,3 +1,4 @@
+import { useFlashMessageStore } from '@/stores/useFlashMessageStore';
 import axios from 'axios';
 import { defineStore } from 'pinia';
 
@@ -35,9 +36,12 @@ export function defineBaseStore<Entity extends BaseEntity>(storeName: string) {
             async createItem(item: Entity) {
                 try {
                     const res = await axios.post<Entity>(`/api/${storeName}`, item);
-                    this.items.push(res.data);
+
+                    useFlashMessageStore().success(res.data.message);
+
+                    return res.data;
                 } catch (error) {
-                    console.error(`Failed createItem:`, error);
+                    useFlashMessageStore().error(error);
                     throw error;
                 }
             },
@@ -45,21 +49,27 @@ export function defineBaseStore<Entity extends BaseEntity>(storeName: string) {
             async updateItem(id: number, item: Entity) {
                 try {
                     const res = await axios.put<Entity>(`/api/${storeName}/${id}`, item);
-                    const index = this.items.findIndex((i) => i.id === id);
 
-                    if (index !== -1) this.items[index] = res.data;
+                    useFlashMessageStore().success(res.data.message);
+
+                    return res.data;
                 } catch (error) {
-                    console.error(`Failed updateItem:`, error);
+                    useFlashMessageStore().error(error);
                     throw error;
                 }
             },
 
             async deleteItem(id: number) {
                 try {
-                    await axios.delete(`/api/${storeName}/${id}`);
+                    const res = await axios.delete(`/api/${storeName}/${id}`);
+
                     this.items = this.items.filter((i) => i.id !== id);
+
+                    useFlashMessageStore().success(res.data.message);
+
+                    return res.data;
                 } catch (error) {
-                    console.error(`Failed deleteItem:`, error);
+                    useFlashMessageStore().error(error);
                     throw error;
                 }
             },

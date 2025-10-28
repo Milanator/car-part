@@ -1,3 +1,6 @@
+<script setup lang="ts">
+import FlashMessage from '@/components/FlashMessage.vue';
+</script>
 <template>
     <div class="d-flex flex-column min-vh-100">
         <!-- Header -->
@@ -18,5 +21,7 @@
         <main class="container flex-grow-1">
             <router-view />
         </main>
+
+        <FlashMessage />
     </div>
 </template>
