@@ -36,7 +36,7 @@ const fetchSuggestions = debounce(async (term: string) => {
         const res = await axios.get(props.apiUrl, { params: { [props.labelField]: term } });
 
         if (res.data?.length) {
-            // preset item
+            // render options
             suggestions.value = res.data;
             showDropdown.value = true;
         } else {
@@ -69,8 +69,10 @@ const getLabel = (item: any) => item[props.labelField] ?? item;
 </script>
 <template>
     <div class="position-relative">
+        <!-- Input -->
         <input type="text" class="form-control" v-model="searchTerm" @focus="showDropdown = true" @blur="hideDropdown" :required="required" />
 
+        <!-- Options -->
         <ul v-if="showDropdown && suggestions.length" class="list-group position-absolute w-100 mt-1 shadow-sm" style="z-index: 1000">
             <li v-for="item in suggestions" :key="item.id" class="list-group-item list-group-item-action" @mousedown.prevent="selectItem(item)">
                 {{ getLabel(item) }}

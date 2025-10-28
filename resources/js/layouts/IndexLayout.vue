@@ -1,26 +1,10 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { IndexLayoutProps } from '@/types/IndexLayoutProps';
+import { useIndexLayout } from '@/composables/useIndexLayout';
 
-const props = defineProps<{
-    store: any;
-    title: string;
-    type: string;
-}>();
+const props = defineProps<IndexLayoutProps>();
 
-const router = useRouter();
-
-const goToCreate = () => router.push(`/${props.type}/create`);
-const goToEdit = (id: number) => router.push(`/${props.type}/${id}/edit`);
-const deleteCar = async (id: number) => {
-    if (!confirm('Naozaj chcete vymazať toto auto?')) return;
-
-    await props.store.deleteItem(id);
-};
-
-onMounted(async () => {
-    await props.store.fetchItems();
-});
+const { goToCreate, goToEdit, deleteItem } = useIndexLayout(props);
 </script>
 <template>
     <div class="container py-5">
@@ -42,7 +26,7 @@ onMounted(async () => {
 
                         <td>
                             <button @click="goToEdit(row.id)" class="btn btn-sm btn-warning me-2"><i class="bi bi-pencil-fill"></i> Upraviť</button>
-                            <button @click="deleteCar(row.id)" class="btn btn-sm btn-danger"><i class="bi bi-trash-fill"></i> Odstrániť</button>
+                            <button @click="deleteItem(row.id)" class="btn btn-sm btn-danger"><i class="bi bi-trash-fill"></i> Odstrániť</button>
                         </td>
                     </tr>
                 </tbody>

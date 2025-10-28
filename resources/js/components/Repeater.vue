@@ -19,7 +19,7 @@ onMounted(() => {
 
 watch(
     () => items,
-    (val) => emit('update:modelValue', val),
+    (value) => emit('update:modelValue', value),
     { deep: true },
 );
 
@@ -41,6 +41,7 @@ const removeItem = (index: number) => items.splice(index, 1);
                     </div>
                 </div>
                 <div class="my-2">
+                    <!-- content -->
                     <slot name="default" :item="item" :index="index" />
                 </div>
             </div>

@@ -1,55 +1,11 @@
 <script setup lang="ts">
 import Loader from '@/components/Loader.vue';
-import { computed, onMounted, reactive, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useFormLayout } from '@/composables/useFormLayout';
+import { FormLayoutProps } from '@/types/FormLayoutProps';
 
-const props = defineProps<{
-    store: any;
-    title: string;
-    type: string;
-    data: object;
-}>();
+const props = defineProps<FormLayoutProps>();
 
-const router = useRouter();
-const route = useRoute();
-
-const id = route.params.id ? Number(route.params.id) : undefined;
-
-const form = reactive<object>(props.data ?? {});
-const errors = ref<object>({});
-const loaded = ref<boolean>(false);
-
-const isEdit = computed(() => !!id);
-const title = computed(() => (isEdit.value ? `Upraviť ${props.title}` : `Pridať ${props.title}`));
-
-onMounted(async () => {
-    if (isEdit.value) {
-        const data = await props.store.getItem(id);
-     
-        Object.assign(form, data);
-    }
-   
-    loaded.value = true;
-});
-
-const submit = async () => {
-    errors.value = {};
-
-    try {
-        if (isEdit.value) {
-            await props.store.updateItem(id, form);
-        } else {
-            await props.store.createItem(form);
-        }
-
-        router.push(`/${props.type}`);
-    } catch (e: any) {
-        errors.value = e.response?.data?.errors ?? {};
-        console.error('Submit error', e);
-    }
-};
-
-const goBack = () => router.push(`/${props.type}`);
+const { form, errors, loaded, title, submit, goBack } = useFormLayout(props);
 </script>
 <template>
     <div class="container py-5">
