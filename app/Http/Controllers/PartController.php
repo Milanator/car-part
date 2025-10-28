@@ -10,16 +10,13 @@ use Illuminate\Http\Request;
 class PartController extends Controller
 {
     protected string $model = Part::class;
-
     protected string $pagePath = 'part';
-
     protected string $routeAs = 'part';
-
     protected array $filterable = ['name'];
 
     protected function getListingQuery()
     {
-        return $this->model::select('id', 'name', 'serial_number');
+        return $this->model::select('id', 'car_id', 'name', 'serial_number')->with('car:id,name');
     }
 
     protected function getModelQuery(): Builder

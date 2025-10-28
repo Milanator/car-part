@@ -12,7 +12,7 @@ import FlashMessage from '@/components/FlashMessage.vue';
                 <nav>
                     <router-link to="/" class="text-white me-3">Domov</router-link>
                     <router-link to="/car" class="text-white me-3">Auta</router-link>
-                    <router-link to="/part" class="text-white">Časti</router-link>
+                    <router-link to="/part" class="text-white">Diely</router-link>
                 </nav>
             </div>
         </header>

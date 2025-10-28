@@ -82,7 +82,7 @@ const goBack = () => router.push('/car');
                     <div v-if="errors.registration_number" class="text-danger mt-1">{{ errors.registration_number }}</div>
                 </div>
 
-                <h2>Časti</h2>
+                <h2>Diely</h2>
                 <Repeater v-model="form.parts">
                     <template #default="{ item, index }">
                         <div class="row g-3">
@@ -105,7 +105,7 @@ const goBack = () => router.push('/car');
                             </div>
 
                             <div v-if="isNewPart(item)" class="alert alert-warning" role="alert">
-                                Časť zatiaľ neexistuje. Po uložení bude vytvorená.
+                                Diel zatiaľ neexistuje. Po uložení bude vytvorená.
                             </div>
                         </div>
                     </template>

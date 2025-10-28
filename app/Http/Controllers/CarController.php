@@ -12,11 +12,8 @@ use Illuminate\Support\Facades\DB;
 class CarController extends Controller
 {
     protected string $model = Car::class;
-
     protected string $pagePath = 'car';
-
     protected string $routeAs = 'car';
-
     protected array $filterable = ['name', 'registration_number', 'is_registered'];
 
     protected function getListingQuery()
