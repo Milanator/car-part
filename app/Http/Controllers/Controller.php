@@ -10,15 +10,19 @@ use Illuminate\Http\{JsonResponse, Request};
 abstract class Controller
 {
     protected string $model;
-    protected string $pagePath;
-    protected string $routeAs;
     protected array $filterable;
+    protected string $formRequest;
 
     abstract protected function getListingQuery();
 
     abstract protected function getModelQuery(): Builder;
 
-    abstract protected function save(Request $request, ?int $id = null): Model;
+    abstract protected function save(array $data, ?int $id = null): Model;
+
+    protected function validateData(Request $request): array
+    {
+        return validator($request->all(), (new $this->formRequest)->rules())->validate();
+    }
 
     protected function apiHandler(Closure $apiHandler): JsonResponse
     {
@@ -36,6 +40,7 @@ abstract class Controller
         return $this->apiHandler(function () use ($request) {
             $query = $this->getListingQuery();
 
+            // filter criteria
             foreach ($this->filterable as $column) {
                 if ($request->filled($column)) {
                     $value = $request->get($column);
@@ -56,12 +61,12 @@ abstract class Controller
 
     public function store(Request $request): JsonResponse
     {
-        return $this->apiHandler(fn() => ['item' => $this->save($request), 'message' => __('success_saved_item')]);
+        return $this->apiHandler(fn() => ['item' => $this->save($this->validateData($request)), 'message' => __('success_saved_item')]);
     }
 
     public function update(Request $request, $id): JsonResponse
     {
-        return $this->apiHandler(fn() => ['item' => $this->save($request, $id), 'message' => __('success_saved_item')]);
+        return $this->apiHandler(fn() => ['item' => $this->save($this->validateData($request), $id), 'message' => __('success_saved_item')]);
     }
 
     public function destroy(int $id): JsonResponse

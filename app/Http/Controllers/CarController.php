@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Car\SaveRequest;
 use App\Models\{Car, Part};
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 class CarController extends Controller
 {
     protected string $model = Car::class;
-    protected string $pagePath = 'car';
-    protected string $routeAs = 'car';
     protected array $filterable = ['name', 'registration_number', 'is_registered'];
+    protected string $formRequest = SaveRequest::class;
 
     protected function getListingQuery()
     {
@@ -25,21 +25,26 @@ class CarController extends Controller
         return $this->model::with('parts:id,car_id,name,serial_number');
     }
 
-    protected function save(Request $request, ?int $id = null): Model
+    protected function saveParts(Car $model, array $data)
     {
-        return DB::transaction(function () use ($id, $request): Car {
-            $model = $this->model::updateOrCreate(['id' => $id], $request->only(['name', 'registration_number', 'is_registered']));
+        foreach ($data['parts'] as $part) {
+            $part['car_id'] = $model->id;
 
-            foreach ($request->parts as $part) {
-                $part['car_id'] = $model->id;
+            $partIds[] = Part::updateOrCreate(['serial_number' => $part['serial_number']], $part)->id;
+        }
 
-                $partIds[] = Part::updateOrCreate(['serial_number' => $part['serial_number']], $part)->id;
-            }
+        // delete parts
+        if (!empty($partIds)) {
+            Part::whereCarId($model->id)->whereNotIn('id', $partIds)->delete();
+        }
+    }
 
-            // delete parts
-            if (!empty($partIds)) {
-                Part::whereCarId($model->id)->whereNotIn('id', $partIds)->delete();
-            }
+    protected function save(array $data, ?int $id = null): Model
+    {
+        return DB::transaction(function () use ($id, $data): Car {
+            $model = $this->model::updateOrCreate(['id' => $id], Arr::only($data, ['name', 'registration_number', 'is_registered']));
+
+            $this->saveParts($model, $data);
 
             return $model;
         });

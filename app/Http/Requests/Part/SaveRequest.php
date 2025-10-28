@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Car;
+namespace App\Http\Requests\Part;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -15,10 +15,8 @@ class SaveRequest extends FormRequest
     {
         return [
             'id' => [],
-            'is_registered' => [],
             'name' => ['required'],
-            'registration_number' => [],
-            'parts' => [],
+            'serial_number' => [],
         ];
     }
 }
