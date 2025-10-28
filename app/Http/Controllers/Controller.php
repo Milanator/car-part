@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Inertia\Response;
 
 abstract class Controller
@@ -17,18 +17,36 @@ abstract class Controller
 
     abstract protected function getListingItems();
 
-    public function index(): Response
+    public function index(): JsonResponse
     {
-        return Inertia::render("{$this->pagePath}/Index", ['items' => $this->getListingItems()]);
+        return response()->json($this->getListingItems());
     }
 
-    public function edit(int $id): Response
+    public function show(int $id): JsonResponse
     {
-        return Inertia::render("{$this->pagePath}/Form", ['model' => $this->model::findOrFail($id)]);
+        return response()->json($this->model::findOrFail($id));
     }
 
-    public function create()
+    public function store(Request $request): RedirectResponse
     {
-        return Inertia::render("{$this->pagePath}/Form", ['model' => []]);
+        $this->model::create($this->validateData($request));
+
+        return redirect()->route("{$this->routeAs}.index")->with('success', 'Item created.');
+    }
+
+    public function update(Request $request, $id): RedirectResponse
+    {
+        $item = $this->model::findOrFail($id);
+
+        $item->update($this->validateData($request, $id));
+
+        return redirect()->route("{$this->routeAs}.index")->with('success', 'Item updated.');
+    }
+
+    public function destroy($id): RedirectResponse
+    {
+        $this->model::findOrFail($id)->delete();
+
+        return redirect()->route("{$this->routeAs}.index")->with('success', 'Item deleted.');
     }
 }

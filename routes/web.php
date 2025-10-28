@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\CarController;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Route;
 
-Route::resource('car', CarController::class);
+Route::get('/{any}', fn(): View => view('app'))->where('any', '.*');
