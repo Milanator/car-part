@@ -3,7 +3,7 @@ import IndexLayout from '@/layouts/IndexLayout.vue';
 import { usePartStore } from '@/stores/usePartStore';
 </script>
 <template>
-    <IndexLayout :store="usePartStore()" title="Zoznam áut" type="car">
+    <IndexLayout :store="usePartStore()" title="Zoznam dielov" type="part">
         <template #head>
             <tr>
                 <th>ID</th>

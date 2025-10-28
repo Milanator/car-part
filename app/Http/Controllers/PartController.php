@@ -21,12 +21,12 @@ class PartController extends Controller
 
     protected function getModelQuery(): Builder
     {
-        return $this->model::query();
+        return $this->model::select('id', 'car_id', 'name', 'serial_number')->with('car:id,name');
     }
 
     protected function save(Request $request, ?int $id = null): Model
     {
-        $model = $this->model::updateOrCreate(['id' => $id], $request->only(['name']));
+        $model = $this->model::updateOrCreate(['id' => $id], $request->only(['name', 'serial_number']));
 
         return $model;
     }
