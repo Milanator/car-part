@@ -24,7 +24,7 @@ class CarController extends Controller
 
     protected function getModelQuery(): Builder
     {
-        return $this->model::with('parts');
+        return $this->model::with('parts:id,car_id,name');
     }
 
     protected function save(Request $request, ?int $id = null): Model
@@ -34,6 +34,7 @@ class CarController extends Controller
         $model = $this->model::updateOrCreate(['id' => $id], $request->only(['name', 'registration_number', 'is_registered']));
 
         // parts
+
 
         return $model;
     }

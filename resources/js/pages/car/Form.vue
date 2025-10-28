@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import Autocomplete from '@/components/Autocomplete.vue';
+import Loader from '@/components/Loader.vue';
 import Repeater from '@/components/Repeater.vue';
 import { useCarStore } from '@/stores/useCarStore';
 import { Car } from '@/types/Car';
@@ -21,8 +22,10 @@ const form = reactive<Car>({
 });
 
 const errors = ref<Record<string, string>>({});
+const loaded = ref<boolean>(false);
 
 const isEdit = computed(() => !!id);
+const title = computed(() => (isEdit.value ? `Upraviť auto ${form.name}` : 'Pridať auto'));
 
 onMounted(async () => {
     if (isEdit.value) {
@@ -30,6 +33,8 @@ onMounted(async () => {
 
         Object.assign(form, data);
     }
+
+    loaded.value = true;
 });
 
 const submit = async () => {
@@ -48,39 +53,60 @@ const goBack = () => router.push('/car');
 </script>
 <template>
     <div class="container py-5">
-        <h1 class="mb-4">{{ isEdit ? `Upraviť auto ${form.name}` : 'Pridať auto' }}</h1>
+        <template v-if="loaded">
+            <h1 class="mb-4">{{ title }}</h1>
 
-        <form @submit.prevent="submit">
-            <div class="mb-3">
-                <label for="name" class="form-label">Názov</label>
-                <input type="text" id="name" v-model="form.name" class="form-control" />
-                <div v-if="errors.name" class="text-danger mt-1">{{ errors.name }}</div>
-            </div>
+            <form @submit.prevent="submit">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Názov</label>
+                    <input type="text" id="name" v-model="form.name" class="form-control" />
+                    <div v-if="errors.name" class="text-danger mt-1">{{ errors.name }}</div>
+                </div>
 
-            <div class="form-check mb-3">
-                <input type="checkbox" id="is_registered" v-model="form.is_registered" class="form-check-input" :checked="form.is_registered" />
-                <label for="is_registered" class="form-check-label">Registrované</label>
-            </div>
+                <div class="form-check mb-3">
+                    <input type="checkbox" id="is_registered" v-model="form.is_registered" class="form-check-input" :checked="form.is_registered" />
+                    <label for="is_registered" class="form-check-label">Registrované</label>
+                </div>
 
-            <div class="mb-3">
-                <label for="registration_number" class="form-label">Registračné číslo <span v-show="form.is_registered">*</span></label>
-                <input type="text" id="registration_number" v-model="form.registration_number" class="form-control" :required="form.is_registered" />
-                <div v-if="errors.registration_number" class="text-danger mt-1">{{ errors.registration_number }}</div>
-            </div>
+                <div class="mb-3">
+                    <label for="registration_number" class="form-label">Registračné číslo <span v-show="form.is_registered">*</span></label>
+                    <input
+                        type="text"
+                        id="registration_number"
+                        v-model="form.registration_number"
+                        class="form-control"
+                        :required="form.is_registered"
+                    />
+                    <div v-if="errors.registration_number" class="text-danger mt-1">{{ errors.registration_number }}</div>
+                </div>
 
-            <h2>Časti</h2>
+                <h2>Časti</h2>
 
-            <Repeater v-model="form.parts">
-                <template #default="{ item, index }">
-                    <div class="row g-3">
-                        {{ item }}
-                        <Autocomplete api-url="/api/part" search-attribute="name" :model-value="item" @select="Object.assign(item, $event)" />
-                    </div>
-                </template>
-            </Repeater>
+                <Repeater v-model="form.parts">
+                    <template #default="{ item, index }">
+                        <div class="row g-3">
+                            <Autocomplete api-url="/api/part" search-attribute="name" v-model="item.name" @select="Object.assign(item, $event)" />
 
-            <button type="submit" class="btn btn-primary">Uložiť</button>
-            <button type="button" @click="goBack" class="btn btn-secondary ms-2">Späť</button>
-        </form>
+                            <!-- part doesnt exist -->
+                            <template v-if="item.name && !item.id">
+                                <span>Časť zatiaľ neexistuje. Po uložení bude vytvorená.</span>
+
+                                <div class="mb-3">
+                                    <label for="serial_number" class="form-label">Sériové číslo</label>
+                                    <input type="text" id="serial_number" v-model="item.serial_number" class="form-control" required />
+                                    <div v-if="errors.serial_number" class="text-danger mt-1">{{ errors.serial_number }}</div>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                </Repeater>
+
+                <button type="submit" class="btn btn-primary">Uložiť</button>
+                <button type="button" @click="goBack" class="btn btn-secondary ms-2">Späť</button>
+            </form>
+        </template>
+        <template v-else>
+            <Loader />
+        </template>
     </div>
 </template>

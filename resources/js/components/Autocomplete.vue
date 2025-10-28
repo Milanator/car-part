@@ -7,35 +7,44 @@ interface Props {
     modelValue?: any;
     apiUrl: string;
     labelField?: string;
-    searchAttribute: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
     modelValue: null,
     labelField: 'name',
-    searchAttribute: 'name',
 });
 
 const emit = defineEmits(['update:modelValue', 'select']);
 
-const searchTerm = ref('');
+const DEBOUNCE = 1000;
+
+const searchTerm = ref(props.modelValue);
 const suggestions = ref<any[]>([]);
 const showDropdown = ref(false);
 
 const fetchSuggestions = debounce(async (term: string) => {
+    // empty term
     if (!term.trim()) {
         suggestions.value = [];
+        emit('update:modelValue', undefined)
         return;
     }
 
     try {
-        const res = await axios.get(props.apiUrl, { params: { [props.searchAttribute]: term } });
-       
-        suggestions.value = res.data;
+        const res = await axios.get(props.apiUrl, { params: { [props.labelField]: term } });
+
+        if (res.data?.length) {
+            // preset item
+            suggestions.value = res.data;
+            showDropdown.value = true;
+        } else {
+            // custom item
+            selectItem({ name: term });
+        }
     } catch (error) {
         console.error('Autocomplete error:', error);
     }
-}, 300);
+}, DEBOUNCE);
 
 watch(searchTerm, (newVal) => {
     fetchSuggestions(newVal);
@@ -44,14 +53,14 @@ watch(searchTerm, (newVal) => {
 const selectItem = (item: any) => {
     emit('update:modelValue', item);
     emit('select', item);
+
     searchTerm.value = getLabel(item);
+
     showDropdown.value = false;
 };
 
 const hideDropdown = () => {
-    setTimeout(() => {
-        showDropdown.value = false;
-    }, 200);
+    setTimeout(() => (showDropdown.value = false), 200);
 };
 
 const getLabel = (item: any) => item[props.labelField] ?? item;

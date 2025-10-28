@@ -3,7 +3,9 @@
         <!-- Header -->
         <header class="bg-primary text-white p-3 mb-4">
             <div class="container d-flex justify-content-between align-items-center">
-                <h1 class="m-0 h4">Car-part</h1>
+                <router-link to="/" class="text-white text-decoration-none">
+                    <h1 class="m-0 h4">Car-part</h1>
+                </router-link>
                 <nav>
                     <router-link to="/" class="text-white me-3">Domov</router-link>
                     <router-link to="/car" class="text-white me-3">Auta</router-link>
@@ -18,8 +20,3 @@
         </main>
     </div>
 </template>
-<style>
-body {
-    font-family: Arial, sans-serif;
-}
-</style>
