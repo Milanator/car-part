@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Car;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 class CarController extends Controller
 {
@@ -12,8 +14,20 @@ class CarController extends Controller
 
     protected string $routeAs = 'car';
 
-    protected function getListingItems()
+    protected array $filterable = ['name', 'registration_number', 'is_registered'];
+
+    protected function getListingQuery()
     {
-        return $this->model::select('id', 'name', 'registration_number', 'is_registered')->get();
+        return $this->model::select('id', 'name', 'registration_number', 'is_registered');
+    }
+
+    protected function save(Request $request, ?int $id = null): Model
+    {
+        // car
+        $model = $this->model::updateOrCreate(['id' => $id], $request->only(['name', 'registration_number', 'is_registered']));
+
+        // parts
+
+        return $model;
     }
 }

@@ -1,11 +1,13 @@
 <script lang="ts" setup>
-import axios from 'axios';
+import { useCarStore } from '@/stores/useCarStore';
+import { Car } from '@/types/Car';
 import { computed, onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { Car } from '@/types/Car';
 
 const router = useRouter();
 const route = useRoute();
+
+const carStore = useCarStore();
 
 const id = route.params.id as string | undefined;
 
@@ -21,38 +23,25 @@ const isEdit = computed(() => !!id);
 
 onMounted(async () => {
     if (isEdit.value) {
-        try {
-            const res = await axios.get<Car>(`/api/cars/${id}`);
-            Object.assign(form, res.data);
-        } catch (e) {
-            console.error('Chyba pri načítaní auta:', e);
-        }
+        const data = await carStore.getItem(id);
+
+        Object.assign(form, data);
     }
 });
 
-// Submit handler
 const submit = async () => {
     errors.value = {};
-  
-    try {
-        if (isEdit.value) {
-            await axios.put(`/api/cars/${id}`, form);
-        } else {
-            await axios.post('/api/cars', form);
-        }
-        router.push('/cars');
-    } catch (e: any) {
-        if (e.response?.status === 422) {
-            errors.value = e.response.data.errors;
-        } else {
-            console.error(e);
-        }
+
+    if (isEdit.value) {
+        await carStore.updateItem(id, form);
+    } else {
+        await carStore.createItem(form);
     }
+
+    goBack();
 };
 
-const goBack = () => {
-    router.push('/cars');
-};
+const goBack = () => router.push('/car');
 </script>
 <template>
     <div class="container py-5">
@@ -66,7 +55,7 @@ const goBack = () => {
             </div>
 
             <div class="form-check mb-3">
-                <input type="checkbox" id="is_registered" v-model="form.is_registered" class="form-check-input" />
+                <input type="checkbox" id="is_registered" v-model="form.is_registered" class="form-check-input" :checked="form.is_registered" />
                 <label for="is_registered" class="form-check-label">Registrované</label>
             </div>
 

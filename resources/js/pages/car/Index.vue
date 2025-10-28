@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { useCarStore } from '@/stores/useCarStore';
-import axios from 'axios';
 import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -15,13 +14,7 @@ onMounted(async () => {
 const deleteCar = async (id: number) => {
     if (!confirm('Naozaj chcete vymazať toto auto?')) return;
 
-    try {
-        await axios.delete(`/api/cars/${id}`);
-        // Aktualizujeme lokálny zoznam
-        items.value = items.value.filter((car) => car.id !== id);
-    } catch (e) {
-        console.error('Chyba pri odstraňovaní auta:', e);
-    }
+    carStore.deleteItem(id);
 };
 
 const goToCreate = () => router.push('/car/create');

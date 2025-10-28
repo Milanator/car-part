@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Closure;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Inertia\Response;
 
 abstract class Controller
 {
@@ -15,38 +15,72 @@ abstract class Controller
 
     protected string $routeAs;
 
-    abstract protected function getListingItems();
+    protected array $filterable;
 
-    public function index(): JsonResponse
+    abstract protected function getListingQuery();
+
+    abstract protected function save(Request $request, ?int $id = null): Model;
+
+    protected function apiHandler(Closure $apiHandler): JsonResponse
     {
-        return response()->json($this->getListingItems());
+        try {
+            return $apiHandler();
+        } catch (\Throwable $exception) {
+            report($exception);
+
+            return response()->json(['message' => 'Server error'], 500);
+        }
+    }
+
+    public function index(Request $request): JsonResponse
+    {
+        return $this->apiHandler(function () use ($request): JsonResponse {
+            $query = $this->getListingQuery();
+
+            foreach ($this->filterable as $column) {
+                if ($request->filled($column)) {
+                    $value = $request->get($column);
+
+                    $query->when(is_string($value), fn($q) => $q->where($column, 'like', "%{$value}%"));
+                    $query->when(!is_string($value), fn($q) => $q->where($column, $value));
+                }
+            }
+
+            return response()->json($query->get());
+        });
     }
 
     public function show(int $id): JsonResponse
     {
-        return response()->json($this->model::findOrFail($id));
+        return $this->apiHandler(function () use ($id): JsonResponse {
+            return response()->json($this->model::findOrFail($id));
+        });
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): JsonResponse
     {
-        $this->model::create($this->validateData($request));
+        return $this->apiHandler(function () use ($request): JsonResponse {
+            $model = $this->save($request);
 
-        return redirect()->route("{$this->routeAs}.index")->with('success', 'Item created.');
+            return response()->json($model);
+        });
     }
 
-    public function update(Request $request, $id): RedirectResponse
+    public function update(Request $request, $id): JsonResponse
     {
-        $item = $this->model::findOrFail($id);
+        return $this->apiHandler(function () use ($request, $id): JsonResponse {
+            $model = $this->save($request, $id);
 
-        $item->update($this->validateData($request, $id));
-
-        return redirect()->route("{$this->routeAs}.index")->with('success', 'Item updated.');
+            return response()->json($model);
+        });
     }
 
-    public function destroy($id): RedirectResponse
+    public function destroy(int $id): JsonResponse
     {
-        $this->model::findOrFail($id)->delete();
+        return $this->apiHandler(function () use ($id): JsonResponse {
+            $this->model::findOrFail($id)->delete();
 
-        return redirect()->route("{$this->routeAs}.index")->with('success', 'Item deleted.');
+            return response()->json(data: ['message' => 'Deleted item']);
+        });
     }
 }

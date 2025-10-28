@@ -10,8 +10,8 @@ return new class extends Migration {
         Schema::create('parts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('car_id')->constrained('cars')->cascadeOnDelete();
-            $table->string('name')->index();
-            $table->string('serial_number')->index()->unique();
+            $table->string('name', 100)->index();
+            $table->string('serial_number', 100)->index()->unique();
             $table->timestamps();
         });
     }

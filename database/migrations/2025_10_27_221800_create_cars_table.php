@@ -9,9 +9,9 @@ return new class extends Migration {
     {
         Schema::create('cars', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->index();
-            $table->string('registration_number')->index()->unique();
-            $table->boolean('is_registered')->default(false);
+            $table->string('name', 100)->index();
+            $table->string('registration_number', 100)->nullable()->index()->unique();
+            $table->boolean('is_registered')->default(0);
             $table->timestamps();
         });
     }
