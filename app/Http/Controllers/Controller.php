@@ -31,7 +31,7 @@ abstract class Controller
         } catch (\Throwable $exception) {
             report($exception);
 
-            return response()->json(['message' => 'Server error'], 500);
+            return response()->json(['message' => $exception->getMessage()], 500);
         }
     }
 

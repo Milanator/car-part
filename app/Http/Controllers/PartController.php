@@ -19,7 +19,7 @@ class PartController extends Controller
 
     protected function getListingQuery()
     {
-        return $this->model::select('id', 'name');
+        return $this->model::select('id', 'name', 'serial_number');
     }
 
     protected function getModelQuery(): Builder

@@ -49,6 +49,8 @@ const submit = async () => {
     goBack();
 };
 
+const isNewPart = (item: object) => item.name && !item.id;
+
 const goBack = () => router.push('/car');
 </script>
 <template>
@@ -81,22 +83,30 @@ const goBack = () => router.push('/car');
                 </div>
 
                 <h2>Časti</h2>
-
                 <Repeater v-model="form.parts">
                     <template #default="{ item, index }">
                         <div class="row g-3">
-                            <Autocomplete api-url="/api/part" search-attribute="name" v-model="item.name" @select="Object.assign(item, $event)" />
+                            <!-- Name -->
+                            <div class="col-sm">
+                                <label class="form-label">Názov</label>
+                                <Autocomplete
+                                    api-url="/api/part"
+                                    search-attribute="name"
+                                    :required="true"
+                                    v-model="item.name"
+                                    @select="Object.assign(item, $event)"
+                                />
+                            </div>
+                            <!-- Serial number -->
+                            <div class="col-sm">
+                                <label class="form-label">Sériové číslo</label>
+                                <input type="text" v-model="item.serial_number" class="form-control" required :readonly="!isNewPart(item)" />
+                                <div v-if="errors.serial_number" class="text-danger mt-1">{{ errors.serial_number }}</div>
+                            </div>
 
-                            <!-- part doesnt exist -->
-                            <template v-if="item.name && !item.id">
-                                <span>Časť zatiaľ neexistuje. Po uložení bude vytvorená.</span>
-
-                                <div class="mb-3">
-                                    <label for="serial_number" class="form-label">Sériové číslo</label>
-                                    <input type="text" id="serial_number" v-model="item.serial_number" class="form-control" required />
-                                    <div v-if="errors.serial_number" class="text-danger mt-1">{{ errors.serial_number }}</div>
-                                </div>
-                            </template>
+                            <div v-if="isNewPart(item)" class="alert alert-warning" role="alert">
+                                Časť zatiaľ neexistuje. Po uložení bude vytvorená.
+                            </div>
                         </div>
                     </template>
                 </Repeater>

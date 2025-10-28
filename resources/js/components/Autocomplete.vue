@@ -7,11 +7,13 @@ interface Props {
     modelValue?: any;
     apiUrl: string;
     labelField?: string;
+    required?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
     modelValue: null,
     labelField: 'name',
+    required: false,
 });
 
 const emit = defineEmits(['update:modelValue', 'select']);
@@ -26,7 +28,7 @@ const fetchSuggestions = debounce(async (term: string) => {
     // empty term
     if (!term.trim()) {
         suggestions.value = [];
-        emit('update:modelValue', undefined)
+        emit('update:modelValue', undefined);
         return;
     }
 
@@ -67,7 +69,7 @@ const getLabel = (item: any) => item[props.labelField] ?? item;
 </script>
 <template>
     <div class="position-relative">
-        <input type="text" class="form-control" v-model="searchTerm" @focus="showDropdown = true" @blur="hideDropdown" />
+        <input type="text" class="form-control" v-model="searchTerm" @focus="showDropdown = true" @blur="hideDropdown" :required="required" />
 
         <ul v-if="showDropdown && suggestions.length" class="list-group position-absolute w-100 mt-1 shadow-sm" style="z-index: 1000">
             <li v-for="item in suggestions" :key="item.id" class="list-group-item list-group-item-action" @mousedown.prevent="selectItem(item)">
