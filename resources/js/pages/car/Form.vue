@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import Repeater from '@/components/Repeater.vue';
 import { useCarStore } from '@/stores/useCarStore';
 import { Car } from '@/types/Car';
 import { computed, onMounted, reactive, ref } from 'vue';
@@ -9,12 +10,13 @@ const route = useRoute();
 
 const carStore = useCarStore();
 
-const id = route.params.id as string | undefined;
+const id = route.params.id as number | undefined;
 
 const form = reactive<Car>({
     name: '',
     registration_number: '',
     is_registered: false,
+    parts: []
 });
 
 const errors = ref<Record<string, string>>({});
@@ -45,7 +47,7 @@ const goBack = () => router.push('/car');
 </script>
 <template>
     <div class="container py-5">
-        <h1 class="mb-4">{{ isEdit ? 'Upraviť auto' : 'Pridať auto' }}</h1>
+        <h1 class="mb-4">{{ isEdit ? `Upraviť auto ${form.name}` : 'Pridať auto' }}</h1>
 
         <form @submit.prevent="submit">
             <div class="mb-3">
@@ -59,13 +61,26 @@ const goBack = () => router.push('/car');
                 <label for="is_registered" class="form-check-label">Registrované</label>
             </div>
 
-            <div v-if="form.is_registered" class="mb-3">
-                <label for="registration_number" class="form-label">Registračné číslo</label>
-                <input type="text" id="registration_number" v-model="form.registration_number" class="form-control" required />
+            <div class="mb-3">
+                <label for="registration_number" class="form-label">Registračné číslo <span v-show="form.is_registered">*</span></label>
+                <input type="text" id="registration_number" v-model="form.registration_number" class="form-control" :required="form.is_registered" />
                 <div v-if="errors.registration_number" class="text-danger mt-1">{{ errors.registration_number }}</div>
             </div>
 
-            <button type="submit" class="btn btn-primary">{{ isEdit ? 'Upraviť' : 'Pridať' }}</button>
+            <h2>Časti</h2>
+
+            <Repeater v-model="form.parts">
+                <template #default="{ item, index }">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Názov</label>
+                            <input v-model="item.name" type="text" class="form-control" />
+                        </div>
+                    </div>
+                </template>
+            </Repeater>
+
+            <button type="submit" class="btn btn-primary">Uložiť</button>
             <button type="button" @click="goBack" class="btn btn-secondary ms-2">Späť</button>
         </form>
     </div>
