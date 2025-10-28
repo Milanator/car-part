@@ -73,7 +73,8 @@ const goBack = () => router.push('/car');
             <Repeater v-model="form.parts">
                 <template #default="{ item, index }">
                     <div class="row g-3">
-                        <Autocomplete api-url="/api/part" search-attribute="name" v-model="item.name" @select="item.id = $event.id" />
+                        {{ item }}
+                        <Autocomplete api-url="/api/part" search-attribute="name" :model-value="item" @select="Object.assign(item, $event)" />
                     </div>
                 </template>
             </Repeater>

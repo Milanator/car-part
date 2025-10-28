@@ -42,7 +42,7 @@ const removeItem = (index: number) => items.splice(index, 1);
             </div>
         </div>
 
-        <div class="text-center mt-3">
+        <div class="text-right my-3">
             <button type="button" class="btn btn-primary" @click="addItem"><i class="bi bi-plus-circle me-1"></i> Pridať položku</button>
         </div>
     </div>

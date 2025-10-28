@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Part;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
@@ -19,6 +20,11 @@ class PartController extends Controller
     protected function getListingQuery()
     {
         return $this->model::select('id', 'name');
+    }
+
+    protected function getModelQuery(): Builder
+    {
+        return $this->model::query();
     }
 
     protected function save(Request $request, ?int $id = null): Model

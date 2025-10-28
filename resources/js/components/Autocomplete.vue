@@ -6,17 +6,13 @@ import { ref, watch } from 'vue';
 interface Props {
     modelValue?: any;
     apiUrl: string;
-    placeholder?: string;
     labelField?: string;
-    valueField?: string;
     searchAttribute: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
     modelValue: null,
-    placeholder: 'Vyhľadať...',
     labelField: 'name',
-    valueField: 'id',
     searchAttribute: 'name',
 });
 
@@ -34,6 +30,7 @@ const fetchSuggestions = debounce(async (term: string) => {
 
     try {
         const res = await axios.get(props.apiUrl, { params: { [props.searchAttribute]: term } });
+       
         suggestions.value = res.data;
     } catch (error) {
         console.error('Autocomplete error:', error);
@@ -61,7 +58,7 @@ const getLabel = (item: any) => item[props.labelField] ?? item;
 </script>
 <template>
     <div class="position-relative">
-        <input type="text" class="form-control" v-model="searchTerm" :placeholder="placeholder" @focus="showDropdown = true" @blur="hideDropdown" />
+        <input type="text" class="form-control" v-model="searchTerm" @focus="showDropdown = true" @blur="hideDropdown" />
 
         <ul v-if="showDropdown && suggestions.length" class="list-group position-absolute w-100 mt-1 shadow-sm" style="z-index: 1000">
             <li v-for="item in suggestions" :key="item.id" class="list-group-item list-group-item-action" @mousedown.prevent="selectItem(item)">
