@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Closure;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -18,6 +19,8 @@ abstract class Controller
     protected array $filterable;
 
     abstract protected function getListingQuery();
+
+    abstract protected function getModelQuery(): Builder;
 
     abstract protected function save(Request $request, ?int $id = null): Model;
 
@@ -53,7 +56,7 @@ abstract class Controller
     public function show(int $id): JsonResponse
     {
         return $this->apiHandler(function () use ($id): JsonResponse {
-            return response()->json($this->model::findOrFail($id));
+            return response()->json($this->getModelQuery()->findOrFail($id));
         });
     }
 

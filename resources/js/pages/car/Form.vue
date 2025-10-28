@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import Autocomplete from '@/components/Autocomplete.vue';
 import Repeater from '@/components/Repeater.vue';
 import { useCarStore } from '@/stores/useCarStore';
 import { Car } from '@/types/Car';
@@ -16,7 +17,7 @@ const form = reactive<Car>({
     name: '',
     registration_number: '',
     is_registered: false,
-    parts: []
+    parts: [],
 });
 
 const errors = ref<Record<string, string>>({});
@@ -72,10 +73,7 @@ const goBack = () => router.push('/car');
             <Repeater v-model="form.parts">
                 <template #default="{ item, index }">
                     <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Názov</label>
-                            <input v-model="item.name" type="text" class="form-control" />
-                        </div>
+                        <Autocomplete api-url="/api/part" search-attribute="name" v-model="item.name" @select="item.id = $event.id" />
                     </div>
                 </template>
             </Repeater>
