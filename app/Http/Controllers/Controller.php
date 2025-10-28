@@ -5,17 +5,13 @@ namespace App\Http\Controllers;
 use Closure;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Illuminate\Http\{JsonResponse, Request};
 
 abstract class Controller
 {
     protected string $model;
-
     protected string $pagePath;
-
     protected string $routeAs;
-
     protected array $filterable;
 
     abstract protected function getListingQuery();

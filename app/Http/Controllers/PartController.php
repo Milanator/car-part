@@ -6,6 +6,7 @@ use App\Models\Part;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PartController extends Controller
 {
@@ -26,8 +27,8 @@ class PartController extends Controller
 
     protected function save(Request $request, ?int $id = null): Model
     {
-        $model = $this->model::updateOrCreate(['id' => $id], $request->only(['name', 'serial_number']));
-
-        return $model;
+        return DB::transaction(function () use ($request, $id) {
+            return $this->model::updateOrCreate(['id' => $id], $request->only(['name', 'serial_number']));
+        });
     }
 }

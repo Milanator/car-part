@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Car;
-use App\Models\Part;
+use App\Models\{Car, Part};
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -28,7 +27,7 @@ class CarController extends Controller
 
     protected function save(Request $request, ?int $id = null): Model
     {
-        $model = DB::transaction(function () use ($id, $request): Car {
+        return DB::transaction(function () use ($id, $request): Car {
             $model = $this->model::updateOrCreate(['id' => $id], $request->only(['name', 'registration_number', 'is_registered']));
 
             foreach ($request->parts as $part) {
@@ -44,7 +43,5 @@ class CarController extends Controller
 
             return $model;
         });
-
-        return $model;
     }
 }

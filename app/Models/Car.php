@@ -26,6 +26,6 @@ class Car extends Model
 
     protected function isRegisteredText(): Attribute
     {
-        return Attribute::make(get: fn(): string => $this->is_registered ? __('Yes') : __('No'));
+        return Attribute::make(get: fn (): string => $this->is_registered ? __('Yes') : __('No'));
     }
 }
