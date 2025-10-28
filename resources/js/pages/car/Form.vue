@@ -99,7 +99,7 @@ const goBack = () => router.push('/car');
                             </div>
                             <!-- Serial number -->
                             <div class="col-sm">
-                                <label class="form-label">Sériové číslo</label>
+                                <label class="form-label">Sériové číslo <span v-show="isNewPart(item)">*</span></label>
                                 <input type="text" v-model="item.serial_number" class="form-control" required :readonly="!isNewPart(item)" />
                                 <div v-if="errors.serial_number" class="text-danger mt-1">{{ errors.serial_number }}</div>
                             </div>

@@ -18,7 +18,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits(['update:modelValue', 'select']);
 
-const DEBOUNCE = 1000;
+const DEBOUNCE = 500;
 
 const searchTerm = ref(props.modelValue);
 const suggestions = ref<any[]>([]);

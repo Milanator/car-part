@@ -55,23 +55,17 @@ abstract class Controller
 
     public function show(int $id): JsonResponse
     {
-        return $this->apiHandler(function () use ($id) {
-            return $this->getModelQuery()->findOrFail($id);
-        });
+        return $this->apiHandler(fn() => $this->getModelQuery()->findOrFail($id));
     }
 
     public function store(Request $request): JsonResponse
     {
-        return $this->apiHandler(function () use ($request) {
-            return ['item' => $this->save($request), 'message' => __('success_saved_item')];
-        });
+        return $this->apiHandler(fn() => ['item' => $this->save($request), 'message' => __('success_saved_item')]);
     }
 
     public function update(Request $request, $id): JsonResponse
     {
-        return $this->apiHandler(function () use ($request, $id) {
-            return ['item' => $this->save($request, $id), 'message' => __('success_saved_item')];
-        });
+        return $this->apiHandler(fn() => ['item' => $this->save($request, $id), 'message' => __('success_saved_item')]);
     }
 
     public function destroy(int $id): JsonResponse

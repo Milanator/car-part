@@ -7,6 +7,7 @@ use App\Models\Part;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CarController extends Controller
 {
@@ -30,18 +31,22 @@ class CarController extends Controller
 
     protected function save(Request $request, ?int $id = null): Model
     {
-        $model = $this->model::updateOrCreate(['id' => $id], $request->only(['name', 'registration_number', 'is_registered']));
+        $model = DB::transaction(function () use ($id, $request): Car {
+            $model = $this->model::updateOrCreate(['id' => $id], $request->only(['name', 'registration_number', 'is_registered']));
 
-        foreach ($request->parts as $part) {
-            $part['car_id'] = $model->id;
+            foreach ($request->parts as $part) {
+                $part['car_id'] = $model->id;
 
-            $partIds[] = Part::updateOrCreate(['serial_number' => $part['serial_number']], $part)->id;
-        }
+                $partIds[] = Part::updateOrCreate(['serial_number' => $part['serial_number']], $part)->id;
+            }
 
-        // delete parts
-        if (!empty($partIds)) {
-            Part::whereCarId($model->id)->whereNotIn('id', $partIds)->delete();
-        }
+            // delete parts
+            if (!empty($partIds)) {
+                Part::whereCarId($model->id)->whereNotIn('id', $partIds)->delete();
+            }
+
+            return $model;
+        });
 
         return $model;
     }
