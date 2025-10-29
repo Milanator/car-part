@@ -9,7 +9,6 @@ export function useFormLayout(props: FormLayoutProps) {
     const id = route.params.id ? Number(route.params.id) : undefined;
 
     const form = reactive<object>(props.data ?? {});
-    const errors = ref<object>({});
     const loaded = ref<boolean>(false);
 
     const isEdit = computed(() => !!id);
@@ -26,8 +25,6 @@ export function useFormLayout(props: FormLayoutProps) {
     });
 
     const submit = async () => {
-        errors.value = {};
-
         try {
             if (isEdit.value) {
                 // update
@@ -39,7 +36,6 @@ export function useFormLayout(props: FormLayoutProps) {
 
             router.push(`/${props.type}`);
         } catch (e: any) {
-            errors.value = e.response?.data?.errors ?? {};
             console.error('Submit error', e);
         }
     };
@@ -48,7 +44,6 @@ export function useFormLayout(props: FormLayoutProps) {
 
     return {
         form,
-        errors,
         loaded,
         isEdit,
         title,

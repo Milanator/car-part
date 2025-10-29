@@ -13,9 +13,18 @@ const emit = defineEmits(['update:modelValue', 'select']);
 const { searchTerm, suggestions, showDropdown, selectItem, hideDropdown, getLabel } = useAutocomplete(props, emit);
 </script>
 <template>
+    <label class="form-label" :for="id">{{ label }}</label>
     <div class="position-relative">
         <!-- Input -->
-        <input type="text" class="form-control" v-model="searchTerm" @focus="showDropdown = true" @blur="hideDropdown" :required="required" />
+        <input
+            type="text"
+            :id="id"
+            class="form-control"
+            v-model="searchTerm"
+            @focus="showDropdown = true"
+            @blur="hideDropdown"
+            :required="required"
+        />
 
         <!-- Options -->
         <ul v-if="showDropdown && suggestions.length" class="list-group position-absolute w-100 mt-1 shadow-sm" style="z-index: 1000">

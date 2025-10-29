@@ -1,5 +1,7 @@
 <script lang="ts" setup>
-import Autocomplete from '@/components/Autocomplete.vue';
+import Autocomplete from '@/components/form/Autocomplete.vue';
+import Checkbox from '@/components/form/Checkbox.vue';
+import Input from '@/components/form/Input.vue';
 import Repeater from '@/components/Repeater.vue';
 import FormLayout from '@/layouts/FormLayout.vue';
 import { useCarStore } from '@/stores/useCarStore';
@@ -17,23 +19,12 @@ const data = reactive<Car>({
 </script>
 <template>
     <FormLayout :store="carStore" type="car" title="auto" :data="data">
-        <template #fields="{ form, errors }">
-            <div class="mb-3">
-                <label for="name" class="form-label">Názov</label>
-                <input type="text" id="name" v-model="form.name" class="form-control" required />
-                <div v-if="errors.name" class="text-danger mt-1">{{ errors.name }}</div>
-            </div>
+        <template #fields="{ form }">
+            <Input id="name" label="Názov" v-model="form.name" :required="true" />
 
-            <div class="form-check mb-3">
-                <input type="checkbox" id="is_registered" v-model="form.is_registered" class="form-check-input" :checked="form.is_registered" />
-                <label for="is_registered" class="form-check-label">Registrované</label>
-            </div>
+            <Checkbox id="is_registered" label="Registrované" v-model="form.is_registered" />
 
-            <div class="mb-3">
-                <label for="registration_number" class="form-label">Registračné číslo <span v-show="form.is_registered">*</span></label>
-                <input type="text" id="registration_number" v-model="form.registration_number" class="form-control" :required="form.is_registered" />
-                <div v-if="errors.registration_number" class="text-danger mt-1">{{ errors.registration_number }}</div>
-            </div>
+            <Input id="registration_number" label="Registračné číslo" v-model="form.registration_number" :required="form.is_registered" />
 
             <h2>Diely</h2>
             <Repeater v-model="form.parts">
@@ -41,8 +32,9 @@ const data = reactive<Car>({
                     <div class="row g-3">
                         <!-- Name -->
                         <div class="col-sm">
-                            <label class="form-label">Názov</label>
                             <Autocomplete
+                                :id="`name-${index}`"
+                                label="Názov"
                                 api-url="/api/part"
                                 search-attribute="name"
                                 :required="true"
@@ -52,9 +44,7 @@ const data = reactive<Car>({
                         </div>
                         <!-- Serial number -->
                         <div class="col-sm">
-                            <label class="form-label">Sériové číslo</label>
-                            <input type="text" v-model="item.serial_number" class="form-control" required  />
-                            <div v-if="errors.serial_number" class="text-danger mt-1">{{ errors.serial_number }}</div>
+                            <Input :id="`registration_number-${index}`" label="Sériové číslo" v-model="item.serial_number" :required="true" />
                         </div>
                     </div>
                 </template>

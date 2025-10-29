@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import Input from '@/components/form/Input.vue';
 import FormLayout from '@/layouts/FormLayout.vue';
 import { usePartStore } from '@/stores/usePartStore';
 import { Car } from '@/types/Car';
@@ -17,23 +18,12 @@ const data = reactive<Part>({
 </script>
 <template>
     <FormLayout :store="partStore" title="diel" type="part" :data="data">
-        <template #fields="{ form, errors }">
-            <div class="mb-3">
-                <label for="name" class="form-label">Názov</label>
-                <input type="text" id="name" v-model="form.name" class="form-control" required />
-                <div v-if="errors.name" class="text-danger mt-1">{{ errors.name }}</div>
-            </div>
+        <template #fields="{ form }">
+            <Input id="name" label="Názov" v-model="form.name" :required="true" />
 
-            <div class="mb-3">
-                <label for="serial_number" class="form-label">Sériové číslo</label>
-                <input type="text" id="serial_number" v-model="form.serial_number" class="form-control" required />
-                <div v-if="errors.serial_number" class="text-danger mt-1">{{ errors.serial_number }}</div>
-            </div>
+            <Input id="serial_number" label="Sériové číslo" v-model="form.serial_number" :required="true" />
 
-            <div class="mb-3">
-                <label for="car_name" class="form-label">Auto</label>
-                <input type="text" id="car_name" v-model="form.car.name" class="form-control" required readonly />
-            </div>
+            <Input id="car_name" label="Auto" v-model="form.car.name" :required="true" :readonly="true" />
         </template>
     </FormLayout>
 </template>
