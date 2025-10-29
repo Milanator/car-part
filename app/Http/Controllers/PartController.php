@@ -12,7 +12,9 @@ use Illuminate\Support\Facades\DB;
 class PartController extends Controller
 {
     protected string $model = Part::class;
+
     protected array $filterable = ['name', 'serial_number'];
+
     protected string $formRequest = SaveRequest::class;
 
     protected function getListingQuery()
@@ -27,6 +29,6 @@ class PartController extends Controller
 
     protected function save(array $data, ?int $id = null): Model
     {
-        return DB::transaction(fn() => $this->model::updateOrCreate(['id' => $id], Arr::only($data, ['name', 'serial_number'])));
+        return DB::transaction(fn () => $this->model::updateOrCreate(['id' => $id], Arr::only($data, ['name', 'serial_number'])));
     }
 }

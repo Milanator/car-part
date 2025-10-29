@@ -10,7 +10,9 @@ use Illuminate\Http\{JsonResponse, Request};
 abstract class Controller
 {
     protected string $model;
+
     protected array $filterable;
+
     protected string $formRequest;
 
     abstract protected function getListingQuery();
@@ -45,8 +47,8 @@ abstract class Controller
                 if ($request->filled($column)) {
                     $value = $request->get($column);
 
-                    $query->when(is_string($value), fn($q) => $q->orWhere($column, 'like', "%{$value}%"));
-                    $query->when(!is_string($value), fn($q) => $q->orWhere($column, $value));
+                    $query->when(is_string($value), fn ($q) => $q->orWhere($column, 'like', "%{$value}%"));
+                    $query->when(!is_string($value), fn ($q) => $q->orWhere($column, $value));
                 }
             }
 
@@ -56,17 +58,17 @@ abstract class Controller
 
     public function show(int $id): JsonResponse
     {
-        return $this->getApiHandler(fn() => $this->getModelQuery()->findOrFail($id));
+        return $this->getApiHandler(fn () => $this->getModelQuery()->findOrFail($id));
     }
 
     public function store(Request $request): JsonResponse
     {
-        return $this->getApiHandler(fn() => ['item' => $this->save($this->validateData($request)), 'message' => __('success_saved_item')]);
+        return $this->getApiHandler(fn () => ['item' => $this->save($this->validateData($request)), 'message' => __('success_saved_item')]);
     }
 
     public function update(Request $request, $id): JsonResponse
     {
-        return $this->getApiHandler(fn() => ['item' => $this->save($this->validateData($request), $id), 'message' => __('success_saved_item')]);
+        return $this->getApiHandler(fn () => ['item' => $this->save($this->validateData($request), $id), 'message' => __('success_saved_item')]);
     }
 
     public function destroy(int $id): JsonResponse
