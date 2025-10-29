@@ -45,12 +45,12 @@ abstract class Controller
                 if ($request->filled($column)) {
                     $value = $request->get($column);
 
-                    $query->when(is_string($value), fn($q) => $q->where($column, 'like', "%{$value}%"));
-                    $query->when(!is_string($value), fn($q) => $q->where($column, $value));
+                    $query->when(is_string($value), fn($q) => $q->orWhere($column, 'like', "%{$value}%"));
+                    $query->when(!is_string($value), fn($q) => $q->orWhere($column, $value));
                 }
             }
 
-            return $query->get();
+            return ['items' => $query->get(), 'filterable' => $this->filterable];
         });
     }
 

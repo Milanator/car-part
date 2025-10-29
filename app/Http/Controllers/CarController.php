@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 class CarController extends Controller
 {
     protected string $model = Car::class;
-    protected array $filterable = ['name', 'registration_number', 'is_registered'];
+    protected array $filterable = ['name', 'registration_number'];
     protected string $formRequest = SaveRequest::class;
 
     protected function getListingQuery()

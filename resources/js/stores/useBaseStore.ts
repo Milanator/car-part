@@ -10,13 +10,15 @@ export function defineBaseStore<Entity extends BaseEntity>(storeName: string) {
     return defineStore(storeName, {
         state: () => ({
             items: [] as Entity[],
+            filterable: []
         }),
         actions: {
-            async fetchItems() {
+            async fetchItems(params = {}) {
                 try {
-                    const res = await axios.get<Entity[]>(`/api/${storeName}`);
+                    const res = await axios.get<Entity[]>(`/api/${storeName}`, { params });
 
-                    this.items = res.data;
+                    this.filterable = res.data.filterable
+                    this.items = res.data.items;
                 } catch (error) {
                     console.error(`Failed fetchItems:`, error);
                     throw error;

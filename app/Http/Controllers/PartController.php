@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 class PartController extends Controller
 {
     protected string $model = Part::class;
-    protected array $filterable = ['name'];
+    protected array $filterable = ['name', 'serial_number'];
     protected string $formRequest = SaveRequest::class;
 
     protected function getListingQuery()

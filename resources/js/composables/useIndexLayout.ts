@@ -1,9 +1,12 @@
 import { IndexLayoutProps } from '@/types/IndexLayoutProps';
-import { onMounted } from 'vue';
+import { debounce } from 'lodash';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 export function useIndexLayout(props: IndexLayoutProps) {
     const router = useRouter();
+
+    const search = ref(undefined);
 
     const goToCreate = () => router.push(`/${props.type}/create`);
 
@@ -15,9 +18,15 @@ export function useIndexLayout(props: IndexLayoutProps) {
         await props.store.deleteItem(id);
     };
 
+    const filter = debounce((event: string | undefined) => {
+        const params = Object.fromEntries(props.store.filterable.map((field: string) => [field, event]));
+
+        props.store.fetchItems(params);
+    }, 1000);
+
     onMounted(async () => {
         await props.store.fetchItems();
     });
 
-    return { goToCreate, goToEdit, deleteItem };
+    return { goToCreate, goToEdit, deleteItem, filter, search };
 }

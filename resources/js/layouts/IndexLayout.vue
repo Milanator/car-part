@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { IndexLayoutProps } from '@/types/IndexLayoutProps';
+import Input from '@/components/form/Input.vue';
 import { useIndexLayout } from '@/composables/useIndexLayout';
+import { IndexLayoutProps } from '@/types/IndexLayoutProps';
 
 const props = defineProps<IndexLayoutProps>();
 
-const { goToCreate, goToEdit, deleteItem } = useIndexLayout(props);
+const { goToCreate, goToEdit, deleteItem, filter, search } = useIndexLayout(props);
 </script>
 <template>
     <div class="container py-5">
@@ -13,7 +14,7 @@ const { goToCreate, goToEdit, deleteItem } = useIndexLayout(props);
             <button class="btn btn-primary" @click="goToCreate"><i class="bi bi-plus-lg"></i> Pridať</button>
         </div>
 
-        <slot name="filter" />
+        <Input v-model="search" @update:model-value="filter" />
 
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover align-middle">

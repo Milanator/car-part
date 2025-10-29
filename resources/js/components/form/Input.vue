@@ -8,13 +8,13 @@ const props = withDefaults(defineProps<InputProps>(), {
     readonly: false,
 });
 
-const emit = defineEmits(['update:modelValue', 'focus', 'blur']);
+const emit = defineEmits(['update:modelValue', 'focus', 'blur', 'input']);
 
 const { value, onInput, onFocus, onBlur } = useInput(props, emit);
 </script>
 <template>
     <div class="mb-3" :class="classes">
-        <label :for="id" class="form-label">
+        <label v-if="label" :for="id" class="form-label">
             {{ label }}
             <span v-if="required">*</span>
         </label>
