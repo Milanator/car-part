@@ -3,12 +3,12 @@ import IndexLayout from '@/layouts/IndexLayout.vue';
 import { useCarStore } from '@/stores/useCarStore';
 </script>
 <template>
-    <IndexLayout :store="useCarStore()" title="Zoznam dielov" type="car">
+    <IndexLayout :store="useCarStore()" title="Zoznam dielov" type="car" filter-placeholder="Hľadaj názov alebo registračné číslo">
         <template #head>
             <tr>
                 <th>ID</th>
                 <th>Názov</th>
-                <th>Reg. číslo</th>
+                <th>Registračné číslo</th>
                 <th>Registrované</th>
                 <th>Akcie</th>
             </tr>

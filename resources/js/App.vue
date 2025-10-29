@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import FlashMessage from '@/components/FlashMessage.vue';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
 </script>
 <template>
     <div class="d-flex" id="wrapper">
@@ -9,8 +12,18 @@ import FlashMessage from '@/components/FlashMessage.vue';
                 <router-link to="/" class="text-decoration-none">CarPart</router-link>
             </div>
             <div class="list-group list-group-flush">
-                <router-link class="list-group-item list-group-item-action list-group-item-light p-3" to="/car">Autá</router-link>
-                <router-link class="list-group-item list-group-item-action list-group-item-light p-3" to="/part">Diely</router-link>
+                <router-link
+                    class="list-group-item list-group-item-action list-group-item-light p-3"
+                    :class="{ active: route.path.startsWith('/car') }"
+                    to="/car"
+                    >Autá</router-link
+                >
+                <router-link
+                    class="list-group-item list-group-item-action list-group-item-light p-3"
+                    :class="{ active: route.path.startsWith('/par') }"
+                    to="/part"
+                    >Diely</router-link
+                >
             </div>
         </div>
         <!-- Page content wrapper-->
@@ -31,5 +44,10 @@ import FlashMessage from '@/components/FlashMessage.vue';
 
 #page-content-wrapper {
     width: 100%;
+}
+
+.list-group .list-group-item.active {
+    background-color: #bdbfc1;
+    border-color: #bdbfc1;
 }
 </style>

@@ -23,6 +23,7 @@ const { value, onInput, onFocus, onBlur } = useInput(props, emit);
             :id="id"
             :required="Boolean(required)"
             :readonly="readonly"
+            :placeholder="props.placeholder"
             autocomplete="off"
             class="form-control"
             v-model="value"

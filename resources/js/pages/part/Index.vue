@@ -3,7 +3,7 @@ import IndexLayout from '@/layouts/IndexLayout.vue';
 import { usePartStore } from '@/stores/usePartStore';
 </script>
 <template>
-    <IndexLayout :store="usePartStore()" title="Zoznam dielov" type="part">
+    <IndexLayout :store="usePartStore()" title="Zoznam dielov" type="part" filter-placeholder="Hľadaj názov alebo sériové číslo">
         <template #head>
             <tr>
                 <th>ID</th>

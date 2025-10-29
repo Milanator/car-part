@@ -14,7 +14,7 @@ const { goToCreate, goToEdit, deleteItem, filter, search } = useIndexLayout(prop
             <button class="btn btn-primary" @click="goToCreate"><i class="bi bi-plus-lg"></i> Pridať</button>
         </div>
 
-        <Input v-model="search" @update:model-value="filter" />
+        <Input v-model="search" @update:model-value="filter" :placeholder="filterPlaceholder" />
 
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover align-middle">

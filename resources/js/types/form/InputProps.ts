@@ -6,4 +6,5 @@ export interface InputProps {
     type?: string;
     required?: boolean | number | undefined;
     readonly?: boolean;
+    placeholder?: string;
 }
