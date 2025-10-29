@@ -1,6 +1,6 @@
 <script lang="ts" setup>
+import { useInput } from '@/composables/useInput';
 import { InputProps } from '@/types/InputProps';
-import { ref, watch } from 'vue';
 
 const props = withDefaults(defineProps<InputProps>(), {
     type: 'text',
@@ -10,17 +10,10 @@ const props = withDefaults(defineProps<InputProps>(), {
 
 const emit = defineEmits(['update:modelValue', 'focus', 'blur']);
 
-const value = ref(props.modelValue);
-
-watch(
-    () => props.modelValue,
-    (newValue) => {
-        value.value = newValue;
-    },
-);
+const { value, onInput, onFocus, onBlur } = useInput(props, emit);
 </script>
 <template>
-    <div class="mb-3">
+    <div class="mb-3" :class="classes">
         <label :for="id" class="form-label">
             {{ label }}
             <span v-if="required">*</span>
@@ -30,11 +23,12 @@ watch(
             :id="id"
             :required="required"
             :readonly="readonly"
+            autocomplete="off"
             class="form-control"
             v-model="value"
-            @input="emit('update:modelValue', value)"
-            @blur="emit('blur', $event)"
-            @focus="emit('focus', $event)"
+            @input="onInput"
+            @blur="onBlur"
+            @focus="onFocus"
         />
     </div>
 </template>

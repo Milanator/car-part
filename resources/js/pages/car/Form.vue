@@ -22,7 +22,7 @@ const updatePartName = (payload: Part, index: number) => {
     data.parts[index] = payload;
 };
 
-const isSetPartName = (item) => item.name && item.name?.trim() !== '';
+const hasPartName = (item: object) => item.name?.trim() !== '' && item.name !== undefined;
 </script>
 <template>
     <FormLayout :store="carStore" type="car" title="auto" :data="data">
@@ -31,9 +31,10 @@ const isSetPartName = (item) => item.name && item.name?.trim() !== '';
 
             <Checkbox id="is_registered" label="Registrované" v-model="form.is_registered" />
 
-            <Input id="registration_number" label="Registračné číslo" v-model="form.registration_number" :required="Boolean(form.is_registered)" />
+            <Input id="registration_number" label="Registračné číslo" :required="Boolean(form.is_registered)" v-model="form.registration_number" />
 
             <h2>Diely</h2>
+            <p>Nastav existujúce alebo nové diely.</p>
             <Repeater v-model="form.parts">
                 <template #default="{ item, index }">
                     <div class="row g-3">
@@ -44,7 +45,7 @@ const isSetPartName = (item) => item.name && item.name?.trim() !== '';
                                 label="Názov"
                                 label-field="name"
                                 api-url="/api/part"
-                                :required="isSetPartName(item)"
+                                :required="hasPartName(item)"
                                 v-model="item.name"
                                 @select="updatePartName($event, index)"
                             />
@@ -54,8 +55,8 @@ const isSetPartName = (item) => item.name && item.name?.trim() !== '';
                             <Input
                                 :id="`registration_number-${index}`"
                                 label="Sériové číslo"
+                                :required="hasPartName(item)"
                                 v-model="item.serial_number"
-                                :required="isSetPartName(item)"
                             />
                         </div>
                     </div>
