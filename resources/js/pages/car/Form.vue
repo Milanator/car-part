@@ -14,8 +14,6 @@ const data = reactive<Car>({
     is_registered: false,
     parts: [],
 });
-
-const isNewPart = (item: object) => item.name && !item.id;
 </script>
 <template>
     <FormLayout :store="carStore" type="car" title="auto" :data="data">
@@ -54,12 +52,10 @@ const isNewPart = (item: object) => item.name && !item.id;
                         </div>
                         <!-- Serial number -->
                         <div class="col-sm">
-                            <label class="form-label">Sériové číslo <span v-show="isNewPart(item)">*</span></label>
-                            <input type="text" v-model="item.serial_number" class="form-control" required :readonly="!isNewPart(item)" />
+                            <label class="form-label">Sériové číslo</label>
+                            <input type="text" v-model="item.serial_number" class="form-control" required  />
                             <div v-if="errors.serial_number" class="text-danger mt-1">{{ errors.serial_number }}</div>
                         </div>
-
-                        <div v-if="isNewPart(item)" class="alert alert-warning" role="alert">Diel zatiaľ neexistuje. Po uložení bude vytvorená.</div>
                     </div>
                 </template>
             </Repeater>

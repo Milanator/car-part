@@ -1,4 +1,6 @@
 {
     "Yes": "Áno",
-    "No": "Nie"
+    "No": "Nie",
+    "success_saved_item": "Položka bola úspešne uložená.",
+    "success_deleted_item": "Položka bola úspešne odstránená."
 }

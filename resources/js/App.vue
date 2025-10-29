@@ -2,26 +2,34 @@
 import FlashMessage from '@/components/FlashMessage.vue';
 </script>
 <template>
-    <div class="d-flex flex-column min-vh-100">
-        <!-- Header -->
-        <header class="bg-primary text-white p-3 mb-4">
-            <div class="container d-flex justify-content-between align-items-center">
-                <router-link to="/" class="text-white text-decoration-none">
-                    <h1 class="m-0 h4">Car-part</h1>
-                </router-link>
-                <nav>
-                    <router-link to="/" class="text-white me-3 text-decoration-none">Domov</router-link>
-                    <router-link to="/car" class="text-white me-3 text-decoration-none">Auta</router-link>
-                    <router-link to="/part" class="text-white text-decoration-none">Diely</router-link>
-                </nav>
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar-->
+        <div class="border-end bg-white" id="sidebar-wrapper">
+            <div class="sidebar-heading border-bottom bg-light p-3">
+                <router-link to="/" class="text-decoration-none">CarPart</router-link>
             </div>
-        </header>
-
-        <!-- Main content -->
-        <main class="container flex-grow-1">
-            <router-view />
-        </main>
-
-        <FlashMessage />
+            <div class="list-group list-group-flush">
+                <router-link class="list-group-item list-group-item-action list-group-item-light p-3" to="/car">Autá</router-link>
+                <router-link class="list-group-item list-group-item-action list-group-item-light p-3" to="/part">Diely</router-link>
+            </div>
+        </div>
+        <!-- Page content wrapper-->
+        <div id="page-content-wrapper">
+            <!-- Page content-->
+            <div class="container-fluid">
+                <router-view />
+            </div>
+        </div>
     </div>
+
+    <FlashMessage />
 </template>
+<style>
+#sidebar-wrapper {
+    min-width: 200px;
+}
+
+#page-content-wrapper {
+    width: 100%;
+}
+</style>

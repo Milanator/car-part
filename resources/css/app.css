@@ -12,3 +12,11 @@ input[readonly],
 input[readonly]:focus {
     background-color: #eeeeee;
 }
+
+html,
+body,
+#app,
+#wrapper {
+    height: 100%;
+    margin: 0;
+}
