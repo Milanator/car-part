@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import Input from '@/components/form/Input.vue';
 import { useAutocomplete } from '@/composables/useAutocomplete';
 import { AutocompleteProps } from '@/types/AutocompleteProps';
 
@@ -13,18 +14,9 @@ const emit = defineEmits(['update:modelValue', 'select']);
 const { searchTerm, suggestions, showDropdown, selectItem, hideDropdown, getLabel } = useAutocomplete(props, emit);
 </script>
 <template>
-    <label class="form-label" :for="id">{{ label }}</label>
     <div class="position-relative">
         <!-- Input -->
-        <input
-            type="text"
-            :id="id"
-            class="form-control"
-            v-model="searchTerm"
-            @focus="showDropdown = true"
-            @blur="hideDropdown"
-            :required="required"
-        />
+        <Input :id="id" label="Názov" v-model="searchTerm" :required="required" @focus="showDropdown = true" @blur="hideDropdown" />
 
         <!-- Options -->
         <ul v-if="showDropdown && suggestions.length" class="list-group position-absolute w-100 mt-1 shadow-sm" style="z-index: 1000">

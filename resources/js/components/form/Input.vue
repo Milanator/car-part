@@ -8,7 +8,7 @@ const props = withDefaults(defineProps<InputProps>(), {
     readonly: false,
 });
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'focus', 'blur']);
 
 const value = ref(props.modelValue);
 
@@ -33,6 +33,8 @@ watch(
             class="form-control"
             v-model="value"
             @input="emit('update:modelValue', value)"
+            @blur="emit('blur', $event)"
+            @focus="emit('focus', $event)"
         />
     </div>
 </template>

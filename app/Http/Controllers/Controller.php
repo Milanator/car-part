@@ -24,10 +24,10 @@ abstract class Controller
         return validator($request->all(), (new $this->formRequest)->rules())->validate();
     }
 
-    protected function apiHandler(Closure $apiHandler): JsonResponse
+    protected function getApiHandler(Closure $handler): JsonResponse
     {
         try {
-            return response()->json($apiHandler());
+            return response()->json($handler());
         } catch (\Throwable $exception) {
             report($exception);
 
@@ -37,7 +37,7 @@ abstract class Controller
 
     public function index(Request $request): JsonResponse
     {
-        return $this->apiHandler(function () use ($request) {
+        return $this->getApiHandler(function () use ($request) {
             $query = $this->getListingQuery();
 
             // filter criteria
@@ -56,22 +56,22 @@ abstract class Controller
 
     public function show(int $id): JsonResponse
     {
-        return $this->apiHandler(fn() => $this->getModelQuery()->findOrFail($id));
+        return $this->getApiHandler(fn() => $this->getModelQuery()->findOrFail($id));
     }
 
     public function store(Request $request): JsonResponse
     {
-        return $this->apiHandler(fn() => ['item' => $this->save($this->validateData($request)), 'message' => __('success_saved_item')]);
+        return $this->getApiHandler(fn() => ['item' => $this->save($this->validateData($request)), 'message' => __('success_saved_item')]);
     }
 
     public function update(Request $request, $id): JsonResponse
     {
-        return $this->apiHandler(fn() => ['item' => $this->save($this->validateData($request), $id), 'message' => __('success_saved_item')]);
+        return $this->getApiHandler(fn() => ['item' => $this->save($this->validateData($request), $id), 'message' => __('success_saved_item')]);
     }
 
     public function destroy(int $id): JsonResponse
     {
-        return $this->apiHandler(function () use ($id) {
+        return $this->getApiHandler(function () use ($id) {
             $this->model::findOrFail($id)->delete();
 
             return ['message' => __('success_deleted_item')];

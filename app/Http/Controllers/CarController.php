@@ -25,15 +25,19 @@ class CarController extends Controller
         return $this->model::with('parts:id,car_id,name,serial_number');
     }
 
-    protected function saveParts(Car $model, array $data)
+    protected function saveParts(Car $model, array $data): void
     {
         foreach ($data['parts'] as $part) {
+            if (empty($part)) {
+                continue;
+            }
+
             $part['car_id'] = $model->id;
 
             $partIds[] = Part::updateOrCreate(['serial_number' => $part['serial_number']], $part)->id;
         }
 
-        // delete parts
+        // delete unmodified parts
         if (!empty($partIds)) {
             Part::whereCarId($model->id)->whereNotIn('id', $partIds)->delete();
         }

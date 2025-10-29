@@ -6,6 +6,7 @@ import Repeater from '@/components/Repeater.vue';
 import FormLayout from '@/layouts/FormLayout.vue';
 import { useCarStore } from '@/stores/useCarStore';
 import { Car } from '@/types/Car';
+import { Part } from '@/types/Part';
 import { reactive } from 'vue';
 
 const carStore = useCarStore();
@@ -17,13 +18,11 @@ const data = reactive<Car>({
     parts: [],
 });
 
-const updatePartName = (payload, item, index) => {
-    // Object.assign(item, payload)
-    console.log(payload);
+const updatePartName = (payload: Part, index: number) => {
     data.parts[index] = payload;
-
-    console.log(data.parts);
 };
+
+const isSetPartName = (item) => item.name && item.name?.trim() !== '';
 </script>
 <template>
     <FormLayout :store="carStore" type="car" title="auto" :data="data">
@@ -45,14 +44,19 @@ const updatePartName = (payload, item, index) => {
                                 label="Názov"
                                 label-field="name"
                                 api-url="/api/part"
-                                :required="true"
+                                :required="isSetPartName(item)"
                                 v-model="item.name"
-                                @select="updatePartName($event, item, index)"
+                                @select="updatePartName($event, index)"
                             />
                         </div>
                         <!-- Serial number -->
                         <div class="col-sm">
-                            <Input :id="`registration_number-${index}`" label="Sériové číslo" v-model="item.serial_number" :required="true" />
+                            <Input
+                                :id="`registration_number-${index}`"
+                                label="Sériové číslo"
+                                v-model="item.serial_number"
+                                :required="isSetPartName(item)"
+                            />
                         </div>
                     </div>
                 </template>
