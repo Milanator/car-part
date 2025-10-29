@@ -1,7 +1,7 @@
 import { AutocompleteProps } from '@/types/form/AutocompleteProps';
 import axios from 'axios';
 import { debounce } from 'lodash';
-import { ref } from 'vue';
+import { ref, watchEffect } from 'vue';
 
 export function useAutocomplete(props: AutocompleteProps, emit: any) {
     const labelField = props.labelField;
@@ -48,6 +48,10 @@ export function useAutocomplete(props: AutocompleteProps, emit: any) {
     };
 
     const getLabel = (item: any) => item[labelField] ?? item;
+
+    watchEffect(() => {
+        searchTerm.value = props.value;
+    });
 
     return {
         searchTerm,

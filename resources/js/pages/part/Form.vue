@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import Autocomplete from '@/components/form/Autocomplete.vue';
 import Input from '@/components/form/Input.vue';
 import FormLayout from '@/layouts/FormLayout.vue';
 import { usePartStore } from '@/stores/usePartStore';
@@ -23,7 +24,15 @@ const data = reactive<Part>({
 
             <Input id="serial_number" label="Sériové číslo" v-model="form.serial_number" :required="true" />
 
-            <Input id="car_name" label="Auto" v-model="form.car.name" :required="true" :readonly="true" />
+            <Autocomplete
+                id="car_name"
+                label="Auto"
+                label-field="name"
+                api-url="/api/car"
+                :value="form.car.name"
+                :required="true"
+                @change="form.car = $event"
+            />
         </template>
     </FormLayout>
 </template>

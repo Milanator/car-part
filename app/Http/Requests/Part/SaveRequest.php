@@ -17,6 +17,7 @@ class SaveRequest extends FormRequest
             'id' => [],
             'name' => ['required'],
             'serial_number' => [],
+            'car' => []
         ];
     }
 }

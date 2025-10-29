@@ -18,7 +18,9 @@ import { usePartStore } from '@/stores/usePartStore';
             <td>{{ row.id }}</td>
             <td>{{ row.name }}</td>
             <td>{{ row.serial_number || '-' }}</td>
-            <td>{{ row.car.name }}</td>
+            <td>
+                <router-link :to="`/car/${row.car.id}/edit`">{{ row.car.name }}</router-link>
+            </td>
         </template>
     </IndexLayout>
 </template>

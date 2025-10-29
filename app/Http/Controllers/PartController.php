@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Part\SaveRequest;
+use App\Models\Car;
 use App\Models\Part;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -27,8 +28,20 @@ class PartController extends Controller
         return $this->model::select('id', 'car_id', 'name', 'serial_number')->with('car:id,name');
     }
 
+    protected function saveCar(array $data): Car
+    {
+        return Car::updateOrCreate(['id' => $data['car']['id'] ?? null], $data['car']);
+    }
+
     protected function save(array $data, ?int $id = null): Model
     {
-        return DB::transaction(fn () => $this->model::updateOrCreate(['id' => $id], Arr::only($data, ['name', 'serial_number'])));
+        return DB::transaction(function () use ($id, $data) {
+            $payload = Arr::only($data, ['name', 'serial_number']);
+            $payload['car_id'] = $this->saveCar($data)->id;
+
+            $model = $this->model::updateOrCreate(['id' => $id], $payload);
+
+            return $model;
+        });
     }
 }
