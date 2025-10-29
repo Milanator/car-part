@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { InputProps } from '@/types/InputProps';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
 const props = withDefaults(defineProps<InputProps>(), {
     type: 'text',
@@ -11,6 +11,13 @@ const props = withDefaults(defineProps<InputProps>(), {
 const emit = defineEmits(['update:modelValue']);
 
 const value = ref(props.modelValue);
+
+watch(
+    () => props.modelValue,
+    (newValue) => {
+        value.value = newValue;
+    },
+);
 </script>
 <template>
     <div class="mb-3">

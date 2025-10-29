@@ -16,6 +16,14 @@ const data = reactive<Car>({
     is_registered: false,
     parts: [],
 });
+
+const updatePartName = (payload, item, index) => {
+    // Object.assign(item, payload)
+    console.log(payload);
+    data.parts[index] = payload;
+
+    console.log(data.parts);
+};
 </script>
 <template>
     <FormLayout :store="carStore" type="car" title="auto" :data="data">
@@ -24,7 +32,7 @@ const data = reactive<Car>({
 
             <Checkbox id="is_registered" label="Registrované" v-model="form.is_registered" />
 
-            <Input id="registration_number" label="Registračné číslo" v-model="form.registration_number" :required="form.is_registered" />
+            <Input id="registration_number" label="Registračné číslo" v-model="form.registration_number" :required="Boolean(form.is_registered)" />
 
             <h2>Diely</h2>
             <Repeater v-model="form.parts">
@@ -35,11 +43,11 @@ const data = reactive<Car>({
                             <Autocomplete
                                 :id="`name-${index}`"
                                 label="Názov"
+                                label-field="name"
                                 api-url="/api/part"
-                                search-attribute="name"
                                 :required="true"
                                 v-model="item.name"
-                                @select="Object.assign(item, $event)"
+                                @select="updatePartName($event, item, index)"
                             />
                         </div>
                         <!-- Serial number -->
