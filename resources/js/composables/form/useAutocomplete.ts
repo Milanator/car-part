@@ -1,4 +1,4 @@
-import { AutocompleteProps } from '@/types/AutocompleteProps';
+import { AutocompleteProps } from '@/types/form/AutocompleteProps';
 import axios from 'axios';
 import { debounce } from 'lodash';
 import { ref } from 'vue';
@@ -57,6 +57,6 @@ export function useAutocomplete(options: AutocompleteProps, emit: any) {
         selectItem,
         hideDropdown,
         getLabel,
-        fetchSuggestions
+        fetchSuggestions,
     };
 }

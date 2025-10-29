@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { useInput } from '@/composables/useInput';
-import { InputProps } from '@/types/InputProps';
+import { useInput } from '@/composables/form/useInput';
+import { InputProps } from '@/types/form/InputProps';
 
 const props = withDefaults(defineProps<InputProps>(), {
     type: 'text',

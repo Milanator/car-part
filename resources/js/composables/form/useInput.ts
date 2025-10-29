@@ -1,4 +1,4 @@
-import { InputProps } from '@/types/InputProps';
+import { InputProps } from '@/types/form/InputProps';
 import { ref, watch } from 'vue';
 
 export function useInput(props: InputProps, emit: any) {

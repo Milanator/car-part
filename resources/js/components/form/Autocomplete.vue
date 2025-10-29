@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import Input from '@/components/form/Input.vue';
-import { useAutocomplete } from '@/composables/useAutocomplete';
-import { AutocompleteProps } from '@/types/AutocompleteProps';
+import { useAutocomplete } from '@/composables/form/useAutocomplete';
+import { AutocompleteProps } from '@/types/form/AutocompleteProps';
 
 const props = withDefaults(defineProps<AutocompleteProps>(), {
     modelValue: '',

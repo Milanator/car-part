@@ -1,4 +1,4 @@
-import { CheckboxProps } from '@/types/CheckboxProps';
+import { CheckboxProps } from '@/types/form/CheckboxProps';
 import { ref, watch } from 'vue';
 
 export function useCheckbox(props: CheckboxProps, emit: any) {

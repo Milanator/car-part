@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { useCheckbox } from '@/composables/useCheckbox';
-import { CheckboxProps } from '@/types/CheckboxProps';
+import { useCheckbox } from '@/composables/form/useCheckbox';
+import { CheckboxProps } from '@/types/form/CheckboxProps';
 
 const props = defineProps<CheckboxProps>();
 
