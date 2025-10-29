@@ -4,12 +4,12 @@ import { useAutocomplete } from '@/composables/form/useAutocomplete';
 import { AutocompleteProps } from '@/types/form/AutocompleteProps';
 
 const props = withDefaults(defineProps<AutocompleteProps>(), {
-    modelValue: '',
+    value: '',
     labelField: 'name',
     required: false,
 });
 
-const emit = defineEmits(['update:modelValue', 'select']);
+const emit = defineEmits(['change']);
 
 const { searchTerm, suggestions, showDropdown, selectItem, hideDropdown, getLabel, fetchSuggestions } = useAutocomplete(props, emit);
 </script>
@@ -24,7 +24,7 @@ const { searchTerm, suggestions, showDropdown, selectItem, hideDropdown, getLabe
             :required="required"
             @focus="showDropdown = true"
             @blur="hideDropdown"
-            @input="fetchSuggestions(searchTerm)"
+            @update:modelValue="fetchSuggestions(searchTerm)"
         />
 
         <!-- Options -->

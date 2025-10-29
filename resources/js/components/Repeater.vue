@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, reactive, watch } from 'vue';
+import { onMounted, reactive } from 'vue';
 
 interface Props {
     modelValue: any[];
@@ -9,7 +9,7 @@ const props = defineProps<Props>();
 
 const emit = defineEmits(['update:modelValue']);
 
-const items = reactive([...props.modelValue]);
+const items = reactive(props.modelValue);
 
 onMounted(() => {
     if (items.length === 0) {
@@ -17,15 +17,9 @@ onMounted(() => {
     }
 });
 
-watch(
-    () => items,
-    (value) => emit('update:modelValue', value),
-    { deep: true },
-);
+const addItem = () => emit('update:modelValue', items.push({}));
 
-const addItem = () => items.push({});
-
-const removeItem = (index: number) => items.splice(index, 1);
+const removeItem = (index: number) => emit('update:modelValue', items.splice(index, 1));
 </script>
 <template>
     <div class="repeater">

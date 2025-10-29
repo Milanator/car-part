@@ -21,7 +21,7 @@ const { value, onInput, onFocus, onBlur } = useInput(props, emit);
         <input
             :type="type"
             :id="id"
-            :required="required"
+            :required="Boolean(required)"
             :readonly="readonly"
             autocomplete="off"
             class="form-control"

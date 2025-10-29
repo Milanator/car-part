@@ -4,6 +4,6 @@ export interface InputProps {
     classes?: string;
     modelValue: string | number | undefined;
     type?: string;
-    required?: boolean;
+    required?: boolean | number | undefined;
     readonly?: boolean;
 }

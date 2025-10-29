@@ -1,5 +1,5 @@
 export interface AutocompleteProps {
-    modelValue?: any;
+    value?: any;
     apiUrl: string;
     labelField: string;
     required?: boolean;

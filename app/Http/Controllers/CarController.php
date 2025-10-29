@@ -30,7 +30,7 @@ class CarController extends Controller
     protected function saveParts(Car $model, array $data): void
     {
         foreach ($data['parts'] as $part) {
-            if (empty($part)) {
+            if (empty($part['serial_number'])) {
                 continue;
             }
 
@@ -40,9 +40,7 @@ class CarController extends Controller
         }
 
         // delete unmodified parts
-        if (!empty($partIds)) {
-            Part::whereCarId($model->id)->whereNotIn('id', $partIds)->delete();
-        }
+        Part::whereCarId($model->id)->whereNotIn('id', $partIds ?? [])->delete();
     }
 
     protected function save(array $data, ?int $id = null): Model

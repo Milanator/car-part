@@ -3,29 +3,29 @@ import axios from 'axios';
 import { debounce } from 'lodash';
 import { ref } from 'vue';
 
-export function useAutocomplete(options: AutocompleteProps, emit: any) {
-    const labelField = options.labelField;
+export function useAutocomplete(props: AutocompleteProps, emit: any) {
+    const labelField = props.labelField;
     const DEBOUNCE = 500;
 
-    const searchTerm = ref(options.modelValue);
+    const searchTerm = ref(props.value);
     const suggestions = ref<any[]>([]);
     const showDropdown = ref(false);
 
     const fetchSuggestions = debounce(async (term: string) => {
         if (!term.trim()) {
             suggestions.value = [];
-            emit('update:modelValue', undefined);
+            emit('change', undefined);
             return;
         }
 
         try {
-            const res = await axios.get(options.apiUrl, { params: { [labelField]: term } });
+            const res = await axios.get(props.apiUrl, { params: { [labelField]: term } });
 
-            setCustomValue(term);
-
-            if (res.data?.length) {
-                suggestions.value = res.data;
+            if (res.data.items?.length) {
+                suggestions.value = res.data.items;
                 showDropdown.value = true;
+            } else {
+                setCustomValue(term);
             }
         } catch (error) {
             console.error('Autocomplete error:', error);
@@ -33,8 +33,7 @@ export function useAutocomplete(options: AutocompleteProps, emit: any) {
     }, DEBOUNCE);
 
     const selectItem = (item: any) => {
-        emit('update:modelValue', item);
-        emit('select', item);
+        emit('change', item);
 
         searchTerm.value = getLabel(item);
         showDropdown.value = false;

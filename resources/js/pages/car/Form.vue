@@ -19,7 +19,7 @@ const data = reactive<Car>({
 });
 
 const updatePartName = (payload: Part, index: number) => {
-    data.parts[index] = payload;
+    data.parts[index] = payload || {};
 };
 
 const hasPartName = (item: object) => item.name?.trim() !== '' && item.name !== undefined;
@@ -31,10 +31,11 @@ const hasPartName = (item: object) => item.name?.trim() !== '' && item.name !== 
 
             <Checkbox id="is_registered" label="Registrované" v-model="form.is_registered" />
 
-            <Input id="registration_number" label="Registračné číslo" :required="Boolean(form.is_registered)" v-model="form.registration_number" />
+            <Input id="registration_number" label="Registračné číslo" :required="form.is_registered" v-model="form.registration_number" />
 
             <h2>Diely</h2>
             <p>Nastav existujúce alebo nové diely.</p>
+
             <Repeater v-model="form.parts">
                 <template #default="{ item, index }">
                     <div class="row g-3">
@@ -45,9 +46,9 @@ const hasPartName = (item: object) => item.name?.trim() !== '' && item.name !== 
                                 label="Názov"
                                 label-field="name"
                                 api-url="/api/part"
+                                :value="item.name"
                                 :required="hasPartName(item)"
-                                v-model="item.name"
-                                @select="updatePartName($event, index)"
+                                @change="updatePartName($event, index)"
                             />
                         </div>
                         <!-- Serial number -->
